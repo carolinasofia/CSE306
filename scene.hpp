@@ -22,4 +22,4 @@ class Scene{
                 spheres[i].index = i;
             }
         }
-}
+};
