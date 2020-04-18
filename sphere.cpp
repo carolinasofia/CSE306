@@ -27,24 +27,33 @@ Intersection Sphere::intersect(const Ray& r){
         // there is an intersection
         // or two
 
-        auto t_temp = dot(u, C - O);
-        auto t1 = t_temp - sqrt(delta);
-        auto t2 = t_temp + sqrt(delta);
+        // auto means it infers the type for you
+        auto t_temp = dot(u, C - O); // direction (dot) (center - origin)
+        auto t1 = t_temp - sqrt(delta); // solving quadratic equation??
+        auto t2 = t_temp + sqrt(delta); // solving quadratic equation??
 
         if (t2 < 0){
-            //
+            // imaginary numbers RAY E
             is_inter = false;
             return Intersection();
         }
-        else if (t1 >= 0)
+        else if (t1 >= 0){
+            // t1 = 0 RAY B
+            // t1 > 0 RAY C
             t = t1;
-        else
+        }
+        else{
+            // t1 < 0 & t2 > 0
+            // ray D 
             t = t2;
-        double distance = t;
-        Vector vec = O + t * u;
+        }
 
-        auto temp = vec - C;
-        Vector normal = temp / norm(temp);
-        return Intersection(is_inter, vec, normal, distance,index);
+        double distance = t; // ??
+        Vector vec = O + t * u; // origin vector + t*direction
+
+        auto temp = vec - C; // 
+        Vector normal = temp / norm(temp); // 
+
+        return Intersection(is_inter, vec, normal, distance,index); 
     }
 }

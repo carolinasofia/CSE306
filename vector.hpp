@@ -9,6 +9,7 @@ class Vector{
         double coords[3]; // the three coordinates
 
     public:
+        // The explicit keyword indicates the Vector’s constructor cannot be called from implicit conversions.
         explicit Vector(double x = 0., double y = 0., double z = 0.)
         {
             coords[0] = x;
