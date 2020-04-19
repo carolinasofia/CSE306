@@ -20,6 +20,7 @@
 
 int main()
 {
+    //make some spheres ??
     Sphere s_left = Sphere(Vector(-21,0,0), 10, Vector(1,1,1),"mirror");
     Sphere s_middle = Sphere(Vector(0, 0, 0), 10, Vector(1, 1, 1));
     Sphere s_right = Sphere(Vector(21, 0, 0), 10, Vector(1, 1, 1), "mirror");
@@ -32,25 +33,30 @@ int main()
 
     Vector Q = Vector(0,0,55);          // center of camera
     double alpha = 60;                  // field of view
-    int W = 720;
-    int H = 720;
-    Camera cam = Camera(Q,alpha,W,H);
+    int W = 720;                        // width
+    int H = 720;                        // height
+    // make the camera
+    Camera cam = Camera(Q,alpha,W,H);   
+    // make the light
     Light L = Light(Vector(-10,20,40),pow(10,5));
-    int max_path_length = 10;
-
+    
+    
+    //make the scene
     Scene scene = Scene({s_middle, s_left, s_right, s_green, s_blue, s_magenta, s_red, s_cyan, s_yellow}, L);
 
-    unsigned char data[W * H * 3];
-
-    int index = 0;
+    int max_path_length = 10; // needed for eg mirrors for like where the ray bounces to
+    unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)
+    
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
-            Vector color = Vector(0,0,0);
-            auto direction = cam.pixel(j,H-i-1)-Q;
+            // for every 'pixel'
+            Vector color = Vector(0,0,0); // initialise colour
+            auto direction = cam.pixel(j,H-i-1)-Q; 
             Ray r = Ray(Q,direction);
   
             color = scene.intensity_reflexion(r,max_path_length);
-            // std::cout << scene.light.intensity<<std::endl;
+            
+            //GAMMA CORRECTION
             double power = 1. / 2.2;
             data[(i * W + j) * 3 + 0] = std::min(255., std::max(0., pow(color[0], power) * 255));
             data[(i * W + j) * 3 + 1] = std::min(255., std::max(0., pow(color[1], power) * 255));
