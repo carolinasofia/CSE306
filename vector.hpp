@@ -3,6 +3,7 @@
 //imports
 #include <iostream>
 #include <math.h>
+#include <vector>
 
 class Vector{
     private:
@@ -81,4 +82,13 @@ Vector operator/(const double t, const Vector &a){
 //print the vector as [x,y,z]
 void print(Vector a){
     std::cout << "[" << a[0] << ", " << a[1] << ", " << a[2] << "]" << std::endl;
+}
+Vector average(std::vector<Vector> colours){
+    double n = colours.size();
+    Vector res = Vector(0,0,0);
+    for(int i = 0; i < n-1; i++){
+        // const Vector temp = ;
+        res = res + colours[i];
+    }
+    return res/n;
 }
