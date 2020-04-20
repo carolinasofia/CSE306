@@ -22,7 +22,7 @@ int main()
 {
     //make some spheres ??
     Sphere s_left = Sphere(Vector(-21,0,0), 10, Vector(1,1,1),"mirror");
-    Sphere s_middle = Sphere(Vector(0, 0, 0), 10, Vector(1, 1, 1));
+    Sphere s_middle = Sphere(Vector(0, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
 
     Sphere s_right = Sphere(Vector(21, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
     // to make a hollow sphere
@@ -37,10 +37,10 @@ int main()
 
     Vector Q = Vector(0,0,55);          // center of camera
     double alpha = 60;                  // field of view
-    int W = 720;                        // width
-    int H = 720;                        // height
+    int W = 500;                        // width
+    int H = 500;                        // height
     // make the camera
-    Camera cam = Camera(Q,alpha,W,H);   
+    Camera camera = Camera(Q,alpha,W,H);   
     // make the light
     Light L = Light(Vector(-10,20,40),pow(10,5));
     
@@ -51,14 +51,15 @@ int main()
     int max_path_length = 10; // needed for eg mirrors for like where the ray bounces to
     unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)
     
+    //for every pixel in the image
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
             // for every 'pixel'
             Vector color = Vector(0,0,0); // initialise colour
-            auto direction = cam.pixel(j,H-i-1)-Q; 
-            Ray r = Ray(Q,direction);
+            auto direction = camera.pixel(j,H-i-1)-Q;   //find the direction of the camera
+            Ray r = Ray(Q,direction); // ray starting at the center of the camera in the direction of the pixel
   
-            color = scene.intensity_reflexion(r,max_path_length);
+            color = scene.getColour(r,max_path_length); 
             
             //GAMMA CORRECTION
             double power = 1. / 2.2;

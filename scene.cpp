@@ -26,7 +26,7 @@ Intersection Scene::intersection(const Ray& r){
 }
 
 //REFLEXION
-Vector Scene::intensity_reflexion(const Ray& r, int ray_depth){
+Vector Scene::getColour(const Ray& r, int ray_depth){
     if (ray_depth < 0){
         // base case
         return Vector(0.,0.,0.);
@@ -42,7 +42,7 @@ Vector Scene::intensity_reflexion(const Ray& r, int ray_depth){
         if (spheres[inter.index].mirror){
             //if the sphere is a mirror
             Ray reflect = Ray(P,r.direction - 2*dot(r.direction,N)*N);
-            return intensity_reflexion(reflect,ray_depth-1);
+            return getColour(reflect,ray_depth-1);
         }
         else if(spheres[inter.index].transparent){
             // if the sphere is transparent
@@ -70,7 +70,7 @@ Vector Scene::intensity_reflexion(const Ray& r, int ray_depth){
             // *0.02 is to counter the 0.01 from the definition of P
             Ray refRay = Ray(P-N*0.02,w_t);
 
-            return intensity_reflexion(refRay, ray_depth-1);
+            return getColour(refRay, ray_depth-1);
         }
         else{
             // if not a mirror|transparent then eg plastic

@@ -10,7 +10,7 @@ class Scene{
         std::vector<Sphere> spheres; // a list of spheres 
         //DECLARATIONS
         Intersection intersection(const Ray& r); 
-        Vector intensity_reflexion(const Ray &r, int ray_depth); 
+        Vector getColour(const Ray &r, int ray_depth); 
         Light light = Light(Vector(0,0,0),0);
         
         // explicit 
