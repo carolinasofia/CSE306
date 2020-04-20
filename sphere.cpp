@@ -54,6 +54,10 @@ Intersection Sphere::intersect(const Ray& r){
         auto temp = vec - C; // 
         Vector normal = temp / norm(temp); // 
 
+        if (this->hollow){
+            normal = -normal;
+        }
+
         return Intersection(is_inter, vec, normal, distance,index); 
     }
 }

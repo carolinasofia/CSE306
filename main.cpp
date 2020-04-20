@@ -23,7 +23,11 @@ int main()
     //make some spheres ??
     Sphere s_left = Sphere(Vector(-21,0,0), 10, Vector(1,1,1),"mirror");
     Sphere s_middle = Sphere(Vector(0, 0, 0), 10, Vector(1, 1, 1));
-    Sphere s_right = Sphere(Vector(21, 0, 0), 10, Vector(1, 1, 1), "mirror");
+
+    Sphere s_right = Sphere(Vector(21, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
+    // to make a hollow sphere
+    Sphere s_right_hollow = Sphere(Vector(21, 0, 0), 9, Vector(1, 1, 1),"transparent",1.5,true);
+    //background spheres
     Sphere s_green = Sphere(Vector(0, 0, -1000), 940, Vector(0, 1, 0));
     Sphere s_blue = Sphere(Vector(0, -1000, 0), 990, Vector(0, 0, 1));
     Sphere s_magenta = Sphere(Vector(0, 0, 1000), 940, Vector(1,0,1));
@@ -42,7 +46,7 @@ int main()
     
     
     //make the scene
-    Scene scene = Scene({s_middle, s_left, s_right, s_green, s_blue, s_magenta, s_red, s_cyan, s_yellow}, L);
+    Scene scene = Scene({s_middle, s_left, s_right_hollow, s_right, s_green, s_blue, s_magenta, s_red, s_cyan, s_yellow}, L);
 
     int max_path_length = 10; // needed for eg mirrors for like where the ray bounces to
     unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)

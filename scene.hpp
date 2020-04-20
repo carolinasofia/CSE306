@@ -7,7 +7,7 @@
 
 class Scene{
      public:
-        std::vector<Sphere> spheres; // ??
+        std::vector<Sphere> spheres; // a list of spheres 
         //DECLARATIONS
         Intersection intersection(const Ray& r); 
         Vector intensity_reflexion(const Ray &r, int ray_depth); 

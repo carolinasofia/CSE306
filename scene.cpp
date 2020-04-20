@@ -32,9 +32,10 @@ Vector Scene::intensity_reflexion(const Ray& r, int ray_depth){
         return Vector(0.,0.,0.);
     }
 
-    Intersection inter = intersection(r); // intersection between the ray and this.scene
+    Intersection inter = this->intersection(r); // intersection between the ray and this.scene
+
     Vector N = inter.normal; // normal to the intersection
-    Vector P = inter.position + N*0.001; // offset the reflected ray slightly to minimise noise
+    Vector P = inter.position + N*0.01; // offset the reflected ray slightly to minimise noise
 
     if (inter.is_intersection){
         // if there is an intersection
@@ -43,8 +44,36 @@ Vector Scene::intensity_reflexion(const Ray& r, int ray_depth){
             Ray reflect = Ray(P,r.direction - 2*dot(r.direction,N)*N);
             return intensity_reflexion(reflect,ray_depth-1);
         }
+        else if(spheres[inter.index].transparent){
+            // if the sphere is transparent
+            double n1,n2;
+
+            if (dot(r.direction, N) > 0)
+            { // ray inside the sphere
+                N = -N; 
+                n1 = spheres[inter.index].refIndex;
+                n2 = 1; // refractive index of incoming plane
+            } 
+            else {
+                n1 = 1; // refractive index of incoming plane
+                n2 = spheres[inter.index].refIndex;
+            }
+
+            // tangential component
+            Vector w_T = (n1/n2) * (r.direction - dot(r.direction,N)*N);
+
+            // normal component
+            Vector w_N = (-N) * sqrt((1-(pow(n1/n2,2)*(1- pow(dot(r.direction,N),2)))));
+
+            Vector w_t =  w_T + w_N;
+
+            // *0.02 is to counter the 0.01 from the definition of P
+            Ray refRay = Ray(P-N*0.02,w_t);
+
+            return intensity_reflexion(refRay, ray_depth-1);
+        }
         else{
-            // if not a mirror then ?
+            // if not a mirror|transparent then eg plastic
             double I = light.intensity;
             Vector S = light.origin;
             
