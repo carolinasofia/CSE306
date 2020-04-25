@@ -48,8 +48,22 @@ Vector Scene::getColour(const Ray& r, int ray_depth){
             // if the sphere is transparent
             double n1,n2;
 
-            if (dot(r.direction, N) > 0)
-            { // ray inside the sphere
+            if(spheres[inter.index].hollow){
+                // if hollow and entering
+                N = -N;
+                n1 = spheres[inter.index].refIndex;
+                n2 = 1.5; 
+                // if(dot(r.direction,N)<0){
+                //     // ray inside the sphere
+                //     // and its hollow
+                //     N = -N; 
+                //     n1 = spheres[inter.index].refIndex;
+                //     n2 = 1.5; // refractive index of incoming plane
+                // }
+            }
+            if (dot(r.direction, N) > 0){
+                // ray inside the sphere
+                // check if its a hollow
                 N = -N; 
                 n1 = spheres[inter.index].refIndex;
                 n2 = 1; // refractive index of incoming plane
@@ -60,12 +74,18 @@ Vector Scene::getColour(const Ray& r, int ray_depth){
             }
 
             // tangential component
+            
             Vector w_T = (n1/n2) * (r.direction - dot(r.direction,N)*N);
+
+            if((1-(pow(n1/n2,2)*(1- pow(dot(r.direction,N),2))))<0){
+                Ray reflect = Ray(P,r.direction - 2*dot(r.direction,N)*N);
+                return getColour(reflect,ray_depth-1);
+            }
 
             // normal component
             Vector w_N = (-N) * sqrt((1-(pow(n1/n2,2)*(1- pow(dot(r.direction,N),2)))));
-
-            Vector w_t =  w_T + w_N;
+           
+            Vector w_t = (w_T + w_N);
 
             // *0.02 is to counter the 0.01 from the definition of P
             Ray refRay = Ray(P-N*0.02,w_t);

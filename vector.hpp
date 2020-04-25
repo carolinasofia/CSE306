@@ -83,12 +83,14 @@ Vector operator/(const double t, const Vector &a){
 void print(Vector a){
     std::cout << "[" << a[0] << ", " << a[1] << ", " << a[2] << "]" << std::endl;
 }
-Vector average(std::vector<Vector> colours){
+Vector average(std::list<Vector> colours){
     double n = colours.size();
-    Vector res = Vector(0,0,0);
-    for(int i = 0; i < n-1; i++){
+    Vector result = Vector(0,0,0); // total of all colour vectors added
+    for (std::list<Vector>::iterator it = colours.begin(); it != colours.end(); it++){
+    //for(int i = 0; i < n-1; i++){
         // const Vector temp = ;
-        res = res + colours[i];
+        result = result + *it;
     }
-    return res/n;
+    //divide by size of list
+    return result/n;
 }
