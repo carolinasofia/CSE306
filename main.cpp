@@ -3,9 +3,11 @@
 #include "vector"
 #include "math.h"
 #include <list>
+#include <chrono>
+using namespace std::chrono; 
 //files
 #include "vector.hpp"
-#include "sphere.hpp"
+#include "sphere.hpp"   
 #include "sphere.cpp"
 #include "ray.hpp"
 #include "scene.hpp"
@@ -22,6 +24,8 @@
 
 int main()
 {
+    auto start = high_resolution_clock::now(); 
+  
     //make spheres
     Sphere s_left = Sphere(Vector(-21,0,0), 10, Vector(1,1,1),"mirror");
     Sphere s_middle = Sphere(Vector(0, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
@@ -57,36 +61,40 @@ int main()
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
             // for every 'pixel'
-            Vector color = Vector(0,0,0); // initialise colour
+            Vector colour = Vector(0,0,0); // initialise colour
             auto direction = camera.pixel(j,H-i-1)-Q;   //find the direction of the camera
             Ray r = Ray(Q,direction); // ray starting at the center of the camera in the direction of the pixel
 
-            //if transparent .. Fresnel
-            // if(scene.spheres[scene.intersection(r).index].transparent){
-            //     //list to hold all the colours
-            //      std::list<Vector> colours;
-            //     for (int k = 0; k <10; k++){
-            //         //send K rays
-            //         color = scene.getColour(r,max_path_length); 
-            //         colours.push_back(color);
-            //     }
-            //     color = average(colours);
-            // }
-            // else{
-            //     color = scene.getColour(r,max_path_length); 
-
-            // }
-            color = scene.getColour(r,max_path_length);
+            //if transparent/mirror .. Fresnel
+            if(scene.spheres[scene.intersection(r).index].transparent || scene.spheres[scene.intersection(r).index].mirror){
+                //list to hold all the colours
+                std::list<Vector> colours;
+                for (int k = 0; k <1000; k++){
+                    //send K rays
+                    colour = scene.getColour(r,max_path_length); 
+                    colours.push_back(colour);
+                }
+                colour = average(colours);
+            }
+            else{
+                colour = scene.getColour(r,max_path_length);
+            }
+            //colour = scene.getColour(r,max_path_length);
 
             //GAMMA CORRECTION
             double power = 1. / 2.2;
-            data[(i * W + j) * 3 + 0] = std::min(255., std::max(0., pow(color[0], power) * 255));
-            data[(i * W + j) * 3 + 1] = std::min(255., std::max(0., pow(color[1], power) * 255));
-            data[(i * W + j) * 3 + 2] = std::min(255., std::max(0., pow(color[2], power) * 255));
+            data[(i * W + j) * 3 + 0] = std::min(255., std::max(0., pow(colour[0], power) * 255));
+            data[(i * W + j) * 3 + 1] = std::min(255., std::max(0., pow(colour[1], power) * 255));
+            data[(i * W + j) * 3 + 2] = std::min(255., std::max(0., pow(colour[2], power) * 255));
         }
     }
 
     stbi_write_jpg("image.jpg", W, H, 3, data, 0);
-    std::cout << "return";
+ 
+    // Get ending timepoint 
+    auto stop = high_resolution_clock::now(); 
+    auto duration = duration_cast<microseconds>(stop - start);
+    duration = duration/1000;
+    std::cout << "Time taken by function: " << duration.count() << " milliseconds" << std::endl; 
     return 0;
 }

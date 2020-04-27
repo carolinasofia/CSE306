@@ -16,19 +16,13 @@ class Intersection {
         Vector normal; //the normal of the intersection
         double distance; // distance between the ?
         int index; // ?
-        bool hollow; // if hollow must invert normal
-        Intersection(bool b = false, Vector P = Vector(0, 0, 0), Vector N = Vector(0, 0, 0), double d = inf, int i = 0,bool h = false)
+        Intersection(bool b = false, Vector P = Vector(0, 0, 0), Vector N = Vector(0, 0, 0), double d = inf, int i = 0)
         {
             is_intersection = b; 
             position = P; 
             normal = N;  
             distance = d;   
             index = i; 
-            hollow = h; //invert N
-            if (hollow){
-                normal = -N;
-            }
-
         }
 };
 
