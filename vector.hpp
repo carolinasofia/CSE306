@@ -4,6 +4,8 @@
 #include <iostream>
 #include <math.h>
 #include <vector>
+#include <random>
+
 
 class Vector{
     private:
@@ -79,6 +81,11 @@ Vector operator/(const Vector &a, const double t){
 Vector operator/(const double t, const Vector &a){
     return Vector(a[0] / t, a[1] / t, a[2] / t);
 }
+// pointwise multiplication
+Vector pointwise(const Vector &a, const Vector &b){
+    return Vector(a[0]*b[0],a[1] * b[1], a[2] * b[2]);
+}
+
 //print the vector as [x,y,z]
 void print(Vector a){
     std::cout << "[" << a[0] << ", " << a[1] << ", " << a[2] << "]" << std::endl;

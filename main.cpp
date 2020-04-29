@@ -9,6 +9,7 @@ using namespace std::chrono;
 #include "vector.hpp"
 #include "sphere.hpp"   
 #include "sphere.cpp"
+#include "tools.cpp"
 #include "ray.hpp"
 #include "scene.hpp"
 #include "scene.cpp"
@@ -43,8 +44,8 @@ int main()
 
     Vector Q = Vector(0,0,55);          // center of camera
     double alpha = 60;                  // field of view
-    int W = 500;                        // width of image
-    int H = 500;                        // height of image
+    const int W = 500;                        // width of image
+    const int H = 500;                        // height of image
     // make the camera
     Camera camera = Camera(Q,alpha,W,H);   
     // make the light
@@ -58,6 +59,7 @@ int main()
     unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)
     
     //for every pixel in the image
+    #pragma omp parallel for
     for (int i = 0; i < H; i++){
         for (int j = 0; j < W; j++){
             // for every 'pixel'
@@ -69,7 +71,7 @@ int main()
             if(scene.spheres[scene.intersection(r).index].transparent || scene.spheres[scene.intersection(r).index].mirror){
                 //list to hold all the colours
                 std::list<Vector> colours;
-                for (int k = 0; k <1000; k++){
+                for (int k = 0; k <50; k++){
                     //send K rays
                     colour = scene.getColour(r,max_path_length); 
                     colours.push_back(colour);
@@ -79,7 +81,6 @@ int main()
             else{
                 colour = scene.getColour(r,max_path_length);
             }
-            //colour = scene.getColour(r,max_path_length);
 
             //GAMMA CORRECTION
             double power = 1. / 2.2;
@@ -96,5 +97,5 @@ int main()
     auto duration = duration_cast<microseconds>(stop - start);
     duration = duration/1000;
     std::cout << "Time taken by function: " << duration.count() << " milliseconds" << std::endl; 
-    return 0;
+    return 0; 
 }
