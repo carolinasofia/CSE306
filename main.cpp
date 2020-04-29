@@ -73,6 +73,8 @@ int main()
                 std::list<Vector> colours;
                 for (int k = 0; k <50; k++){
                     //send K rays
+                    // Vector randomray =  boxMuller()//BOXMULLER
+                    // Ray 
                     colour = scene.getColour(r,max_path_length); 
                     colours.push_back(colour);
                 }
