@@ -61,6 +61,7 @@ int main()
     //for every pixel in the image
     #pragma omp parallel for
     for (int i = 0; i < H; i++){
+        #pragma omp parallel for
         for (int j = 0; j < W; j++){
             // for every 'pixel'
             Vector colour = Vector(0,0,0); // initialise colour
@@ -71,11 +72,15 @@ int main()
             if(scene.spheres[scene.intersection(r).index].transparent || scene.spheres[scene.intersection(r).index].mirror){
                 //list to hold all the colours
                 std::list<Vector> colours;
-                for (int k = 0; k <50; k++){
+                for (int k = 0; k <10; k++){
                     //send K rays
-                    // Vector randomray =  boxMuller()//BOXMULLER
-                    // Ray 
-                    colour = scene.getColour(r,max_path_length); 
+                    Vector randomdir = boxMuller();//BOXMULLER
+                    Vector newdir = r.direction + randomdir;
+                    newdir = normalization(newdir);
+                    
+                    Ray randomray = Ray(Q,newdir);
+
+                    colour = scene.getColour(randomray,max_path_length); 
                     colours.push_back(colour);
                 }
                 colour = average(colours);
@@ -99,5 +104,7 @@ int main()
     auto duration = duration_cast<microseconds>(stop - start);
     duration = duration/1000;
     std::cout << "Time taken by function: " << duration.count() << " milliseconds" << std::endl; 
+    std::cout << "Time taken by function: " << duration.count()/1000 << " seconds" << std::endl; 
+
     return 0; 
 }
