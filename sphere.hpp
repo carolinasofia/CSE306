@@ -4,29 +4,10 @@
 #include "vector.hpp"
 #include "ray.hpp"
 #include <limits>
+#include "tools.cpp"
+#include "geometry.cpp"
 
-// you need this in intersection constructor
-// To have a default distance when there is no intersection 
-double inf = std::numeric_limits<double>::infinity();
-
-class Intersection {
-    public:
-        bool is_intersection; // ?
-        Vector position; // ?
-        Vector normal; //the normal of the intersection
-        double distance; // distance between the ?
-        int index; // ?
-        Intersection(bool b = false, Vector P = Vector(0, 0, 0), Vector N = Vector(0, 0, 0), double d = inf, int i = 0)
-        {
-            is_intersection = b; 
-            position = P; 
-            normal = N;  
-            distance = d;   
-            index = i; 
-        }
-};
-
-class Sphere {
+class Sphere : public Geometry{
     public:
         Vector center; // center of the sphere
         double radius; // radius of the sphere

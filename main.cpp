@@ -15,6 +15,8 @@ using namespace std::chrono;
 #include "scene.cpp"
 #include "camera.hpp"
 #include "light.hpp"
+#include "geometry.cpp"
+#include "mesh.cpp"
 
 
 #define STB_IMAGE_IMPLEMENTATION

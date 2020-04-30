@@ -1,4 +1,5 @@
 #include "sphere.hpp"
+#include "tools.cpp"
 
 // declaration of the function instersect
 // found in the class Sphere

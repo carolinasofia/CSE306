@@ -1,8 +1,13 @@
 #include <string>
+#include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include <stdio.h>
 #include <algorithm>
 #include <vector>
+#include "geometry.cpp"
+#include "tools.cpp"
+#include "ray.hpp"
 
 class TriangleIndices {
 public:
@@ -15,11 +20,16 @@ public:
 };
 
 
-class TriangleMesh {
+class TriangleMesh : public Geometry{
 public:
   ~TriangleMesh() {}
 	TriangleMesh() {};
-	
+
+	Intersection intersect(const Ray& r){
+		return Intersection();
+	}
+
+
 	void readOBJ(const char* obj) {
 
 		char matfile[255];

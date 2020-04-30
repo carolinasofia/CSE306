@@ -146,7 +146,7 @@ Vector Scene::getColour(const Ray& r, int ray_depth){
             double I = light.intensity;
             Vector S = light.origin;
             
-            Sphere s = spheres[inter.index]; //sphere that ray is intersecting with
+            auto s = spheres[inter.index]; //sphere that ray is intersecting with
             Vector albedo = s.albedo; // colour of that sphere
 
             double d = norm(S - P); // norm of distance between light source and intersection
