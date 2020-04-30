@@ -26,11 +26,12 @@ Intersection Sphere::intersect(const Ray& r){
     else{
         // there is an intersection
         // or two
-
+        
         // auto means it infers the type for you
+        auto sqrtdelta =sqrt(delta);
         auto t_temp = dot(u, C - O); // direction (dot) (center - origin)
-        auto t1 = t_temp - sqrt(delta); // solving quadratic equation??
-        auto t2 = t_temp + sqrt(delta); // solving quadratic equation??
+        auto t1 = t_temp - sqrtdelta; // solving quadratic equation??
+        auto t2 = t_temp + sqrtdelta; // solving quadratic equation??
 
         if (t2 < 0){
             // imaginary numbers RAY E

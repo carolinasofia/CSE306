@@ -28,7 +28,7 @@ int main()
     auto start = high_resolution_clock::now(); 
   
     //make spheres
-    Sphere s_left = Sphere(Vector(-21,0,0), 10, Vector(1,1,1),"mirror");
+    Sphere s_left = Sphere(Vector(-21,0,0), 10, Vector(1,1,1));
     Sphere s_middle = Sphere(Vector(0, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
 
     Sphere s_right = Sphere(Vector(21, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
@@ -59,35 +59,27 @@ int main()
     unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)
     
     //for every pixel in the image
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(dynamic, 1)
     for (int i = 0; i < H; i++){
-        #pragma omp parallel for
         for (int j = 0; j < W; j++){
-            // for every 'pixel'
             Vector colour = Vector(0,0,0); // initialise colour
             auto direction = camera.pixel(j,H-i-1)-Q;   //find the direction of the camera
             Ray r = Ray(Q,direction); // ray starting at the center of the camera in the direction of the pixel
-
-            //if transparent/mirror .. Fresnel
-            if(scene.spheres[scene.intersection(r).index].transparent || scene.spheres[scene.intersection(r).index].mirror){
+                //Fresnel
                 //list to hold all the colours
                 std::list<Vector> colours;
-                for (int k = 0; k <10; k++){
+                for (int k = 0; k <100; k++){
                     //send K rays
                     Vector randomdir = boxMuller();//BOXMULLER
-                    Vector newdir = r.direction + randomdir;
-                    newdir = normalization(newdir);
+                    Vector newdir = direction + randomdir;
                     
                     Ray randomray = Ray(Q,newdir);
-
+                
                     colour = scene.getColour(randomray,max_path_length); 
                     colours.push_back(colour);
                 }
                 colour = average(colours);
-            }
-            else{
-                colour = scene.getColour(r,max_path_length);
-            }
+            
 
             //GAMMA CORRECTION
             double power = 1. / 2.2;
