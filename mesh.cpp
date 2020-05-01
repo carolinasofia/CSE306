@@ -26,6 +26,7 @@ public:
 	TriangleMesh() {};
 
 	Intersection intersect(const Ray& r){
+		//filler
 		return Intersection();
 	}
 
