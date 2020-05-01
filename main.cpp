@@ -53,9 +53,11 @@ int main()
     // make the light
     Light L = Light(Vector(-10,20,40),pow(10,5));
     
-    
+    //TriangleMesh m = TriangleMesh();
     //make the scene
-    Scene scene = Scene({s_middle, s_left, s_right_hollow, s_right, s_green, s_blue, s_magenta, s_red, s_cyan, s_yellow}, L);
+    //Scene scene = Scene({&s_yellow,&s_middle},L);
+    Geometry spheres[2] = {s_middle, s_left, s_right_hollow, s_right, s_green, s_blue, s_magenta, s_red, s_cyan, s_yellow};
+    Scene scene = Scene(spheres, L);
 
     int max_path_length = 10; // needed for eg mirrors for where the ray bounces to
     unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)

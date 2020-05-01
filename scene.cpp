@@ -15,7 +15,7 @@ Intersection Scene::intersection(const Ray& r){
     Intersection res; // 
     for (int i = 0;i<n;i++){
         // for every spheres intersect with the ray
-        auto temp = spheres[i].intersect(r);
+        auto temp = spheres[i]->intersect(r);
         if (temp.is_intersection){
             // if there is an intersection
             if(temp.distance < min_d){
@@ -80,30 +80,30 @@ Vector Scene::getColour(const Ray& r, int ray_depth){
 
     if (inter.is_intersection){
         // if there is an intersection
-        if (spheres[inter.index].mirror){
+        if (spheres[inter.index]->mirror){
             //if the sphere is a mirror
             Ray reflect = Ray(P,r.direction - 2*dot(r.direction,N)*N);
             return getColour(reflect,ray_depth-1);
         }
-        else if(spheres[inter.index].transparent){
+        else if(spheres[inter.index]->transparent){
             // if the sphere is transparent
             double n1,n2;
 
-            if(spheres[inter.index].hollow){
+            if(spheres[inter.index]->hollow){
                 // if hollow and entering
                 N = -N;
-                n1 = spheres[inter.index].refIndex;
+                n1 = spheres[inter.index]->refIndex;
                 n2 = 1.5; 
             }
             if (dot(r.direction, N) > 0){
                 // ray inside the sphere
                 N = -N; 
-                n1 = spheres[inter.index].refIndex;
+                n1 = spheres[inter.index]->refIndex;
                 n2 = 1; // refractive index of incoming plane
             } 
             else {
                 n1 = 1; // refractive index of incoming plane
-                n2 = spheres[inter.index].refIndex;
+                n2 = spheres[inter.index]->refIndex;
             }
             
             //FRESNELs LAW
@@ -147,7 +147,7 @@ Vector Scene::getColour(const Ray& r, int ray_depth){
             Vector S = light.origin;
             
             auto s = spheres[inter.index]; //sphere that ray is intersecting with
-            Vector albedo = s.albedo; // colour of that sphere
+            Vector albedo = s->albedo; // colour of that sphere
 
             double d = norm(S - P); // norm of distance between light source and intersection
             Vector omega = (S - P) / d; // non-norm distance between light and intersection of length 1
