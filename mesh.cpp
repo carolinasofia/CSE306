@@ -8,6 +8,7 @@
 #include "geometry.cpp"
 #include "tools.cpp"
 #include "ray.hpp"
+#include "vector.hpp"
 
 class TriangleIndices {
 public:
@@ -23,7 +24,12 @@ public:
 class TriangleMesh : public Geometry{
 public:
   ~TriangleMesh() {}
-	TriangleMesh() {};
+	TriangleMesh(Vector A = Vector(0,0,0),std::string surface = "diffuse", double n = 0) {
+		Vector albedo = A;
+        if (surface == "mirror") mirror = true;
+        if (surface == "transparent") transparent = true;
+        refIndex = n; // refraction index
+	};
 
 	Intersection intersect(const Ray& r){
 		return Intersection();

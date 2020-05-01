@@ -70,7 +70,7 @@ int main()
                 //Fresnel
                 //list to hold all the colours
                 std::list<Vector> colours;
-                for (int k = 0; k <100; k++){
+                for (int k = 0; k <10; k++){
                     //send K rays
                     Vector randomdir = boxMuller();//BOXMULLER
                     Vector newdir = direction + randomdir;

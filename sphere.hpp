@@ -11,11 +11,6 @@ class Sphere : public Geometry{
     public:
         Vector center; // center of the sphere
         double radius; // radius of the sphere
-        Vector albedo; // stands for the colour [red,green,blue]
-        int index; // its place in the scene
-        bool mirror = false; // if the sphere is a mirror, for reflection
-        bool transparent = false; // if the sphere is transparent, for refraction
-        double refIndex; // refraction index
         bool hollow; // if a sphere is hollow
 
         Intersection intersect(const Ray &r); // JUST A DECLARATION - definition found in cpp file
