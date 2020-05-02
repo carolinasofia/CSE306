@@ -10,8 +10,8 @@ static std::uniform_real_distribution<double> uniform(0, 1);
 // definition of function intersection in the class Scene
 // returns an Intersection object between the ray and the scene
 Intersection Scene::intersection(const Ray& r){
-    int n = spheres.size(); //
-    double min_d = inf; // minimum distance == infinity??
+    int n = spheres.size();
+    double min_d = inf; // minimum distance == infinity
     Intersection res; // 
     for (int i = 0;i<n;i++){
         // for every spheres intersect with the ray

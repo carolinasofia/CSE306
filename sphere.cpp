@@ -10,13 +10,13 @@ Intersection Sphere::intersect(const Ray& r){
     // return the intersection point between the sphere and the given ray
 
     double t = 0; //?
-    bool is_inter = true; // is an intersection?
+    bool is_inter = true; // is an intersection
     Vector u = r.direction; // direction of ray
     Vector O = r.origin; // origin of ray
     Vector C = this->center; // center of sphere 
     double R = this->radius; // radius of sphere
 
-    //????
+    
     auto delta = pow(dot(u, O - C), 2) - ((pow(norm(O - C), 2)) - pow(R, 2)); 
 
     if (delta < 0){  
@@ -50,11 +50,11 @@ Intersection Sphere::intersect(const Ray& r){
             t = t2;
         }
 
-        double distance = t; // ??
+        double distance = t; // distance
         Vector vec = O + t * u; // origin vector + t*direction
 
         auto temp = vec - C; // 
-        Vector normal = temp / norm(temp); // 
+        Vector normal = temp / norm(temp); //
 
         return Intersection(is_inter, vec, normal, distance,index); 
     }

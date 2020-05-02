@@ -23,16 +23,65 @@ public:
 
 class TriangleMesh : public Geometry{
 public:
+
   ~TriangleMesh() {}
 	TriangleMesh(Vector A = Vector(0,0,0),std::string surface = "diffuse", double n = 0) {
 		Vector albedo = A;
+		vertexcolors.push_back(A); // add colour to vertexcolours
         if (surface == "mirror") mirror = true;
         if (surface == "transparent") transparent = true;
         refIndex = n; // refraction index
+		//make a triangle
+		indices.push_back(TriangleIndices(0,1,2));
+		vertices.push_back(Vector(1,1,1));
+		vertices.push_back(Vector(1,2,1));
+		vertices.push_back(Vector(2,2,1));
+
 	};
 
+	std::vector<TriangleIndices> indices; // holds the index of each vertex
+	std::vector<Vector> vertices; //holds the vector of each vertice
+	std::vector<Vector> normals; //holds the normals
+	std::vector<Vector> uvs; // holds uv coordinates??
+	std::vector<Vector> vertexcolors; // holds the albedos
+
 	Intersection intersect(const Ray& r){
-		return Intersection();
+		double min_d = inf;
+		//triangle vertices
+		Vector A,B,C,e1,e2,N,O,u,normal;
+		O = r.origin; // origin of ray
+		u = r.direction; // direction of ray
+		TriangleIndices result;
+		for (int i = 0; i<indices.size();i++){
+			auto temp = indices[i];
+			
+			//for every triangle
+			A = vertices[temp.vtxi];
+			B = vertices[temp.vtxj];
+			C = vertices[temp.vtxk];
+			e1 = B - A;
+			e2 = C - A;
+			N = cross(e1,e2); //non-normalized N
+			
+			auto temp1 = cross((A-O),u);
+			auto denom = dot(u,N);
+
+			auto beta = dot(e2,temp1)/denom;
+			auto gamma = dot(e1,temp1)/denom;
+			auto alpha = 1 - beta - gamma;
+			auto t = dot((A-O),N)/denom;
+
+			if(inRange(0,1,alpha) && inRange(0,1,beta) && inRange(0,1,gamma)){
+				if(t < min_d){
+                // if the distance is smaller than others
+                min_d = t;
+				normal = alpha*normals[temp.ni] + beta*normals[temp.nj] + gamma*normals[temp.nk];
+            	}
+			}
+			
+		}
+        Vector vec = O + min_d * u; // origin vector + t*direction
+		return Intersection(true,vec,normal,min_d,index);
 	}
 
 
@@ -210,10 +259,6 @@ public:
 
 	}
 
-	std::vector<TriangleIndices> indices;
-	std::vector<Vector> vertices;
-	std::vector<Vector> normals;
-	std::vector<Vector> uvs;
-	std::vector<Vector> vertexcolors;
+	
 	
 };

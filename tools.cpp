@@ -45,3 +45,7 @@ Vector boxMuller () {
     V = Vector(x,y,0);
     return V;
 }
+
+bool inRange(unsigned low, unsigned high, unsigned x){
+    return (low <= x && x <= high);
+}
