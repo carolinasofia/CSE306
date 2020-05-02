@@ -89,12 +89,14 @@ Vector Scene::getColour(const Ray& r, int ray_depth){
         else if(content[inter.index]->transparent){
             // if the sphere is transparent
             double n1,n2;
-
-            if(content[inter.index]->hollow){
-                // if hollow and entering
-                N = -N;
-                n1 = content[inter.index]->refIndex;
-                n2 = 1.5; 
+            if(content[inter.index]->sphere){
+                Sphere* sphere = dynamic_cast<Sphere*>(content[inter.index]);
+                if(sphere->hollow){
+                    // if hollow and entering
+                    N = -N;
+                    n1 = content[inter.index]->refIndex;
+                    n2 = 1.5; 
+                }
             }
             if (dot(r.direction, N) > 0){
                 // ray inside the sphere
