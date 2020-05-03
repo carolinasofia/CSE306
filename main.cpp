@@ -53,7 +53,7 @@ int main()
     // make the light
     Light L = Light(Vector(-10,20,40),pow(10,5));
     
-    Geometry* m = new TriangleMesh(Vector(1,1,0),"diffuse",2);
+    //Geometry* m = new TriangleMesh(Vector(1,1,0),"diffuse",2);
     Geometry* cat = new TriangleMesh("cat.obj",H,W);
     
     
@@ -63,7 +63,7 @@ int main()
     Scene scene = Scene({s_green,s_blue,s_magenta,s_red,s_cyan,s_yellow,cat}, L);
 
 
-    int max_path_length = 2; // needed for eg mirrors for where the ray bounces to
+    int max_path_length = 5; // needed for eg mirrors for where the ray bounces to
     unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)
     
     //for every pixel in the image
@@ -76,7 +76,7 @@ int main()
                 //Fresnel
                 //list to hold all the colours
                 std::list<Vector> colours;
-                for (int k = 0; k <10; k++){
+                for (int k = 0; k <32; k++){
                     //send K rays
                     Vector randomdir = boxMuller();//BOXMULLER
                     Vector newdir = direction + randomdir;
@@ -94,7 +94,9 @@ int main()
             data[(i * W + j) * 3 + 0] = std::min(255., std::max(0., pow(colour[0], power) * 255));
             data[(i * W + j) * 3 + 1] = std::min(255., std::max(0., pow(colour[1], power) * 255));
             data[(i * W + j) * 3 + 2] = std::min(255., std::max(0., pow(colour[2], power) * 255));
+            std::cout << j << "  "; 
         }
+        std::cout << i << "  " ;
     }
 
     stbi_write_jpg("image.jpg", W, H, 3, data, 0);  
@@ -105,6 +107,8 @@ int main()
     duration = duration/1000;
     std::cout << "Time taken by function: " << duration.count() << " milliseconds" << std::endl; 
     std::cout << "Time taken by function: " << duration.count()/1000 << " seconds" << std::endl; 
+    std::cout << "Time taken by function: " << duration.count()/60000 << " minutes" << std::endl; 
+
 
     return 0; 
 }

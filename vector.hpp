@@ -29,7 +29,7 @@ class Vector{
             // returns a const double - meaning you cant change it later
             // const after args means you promise you wont change args
             const double &operator[](int i) const { return coords[i]; }
-            // NOT SURE WHY WE NEED TWO ??
+            
             double &operator[](int i) { return coords[i]; }
 };
 // addition of two vectors

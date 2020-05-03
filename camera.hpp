@@ -9,7 +9,7 @@
 class Camera{
     public:
         Vector center;      // center of camera
-        double fov;         // field of view ?? why is this a double an angle?
+        double fov;         // field of view 
         double f;           // distance between screen and center
         double width;       
         double height;       
@@ -20,7 +20,7 @@ class Camera{
             height = H;
         }
         Vector pixel(int x, int y){
-            double f = this->width / (2*tan(dtr*this->fov/2)); //width of this camera / (2 * tan(radian conversion of the fov angle/2?)
+            double f = this->width / (2*tan(dtr*this->fov/2)); //width of this camera / (2 * tan(radian conversion of the fov angle/2)
 
             // return a vector of : // lecture note facts
             // the center of the camera (x value) + the x value of the pixel + 0.5 + width/2 

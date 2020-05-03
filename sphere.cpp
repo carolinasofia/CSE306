@@ -9,14 +9,14 @@
 Intersection Sphere::intersect(const Ray& r){
     // return the intersection point between the sphere and the given ray
 
-    double t = 0; //?
-    bool is_inter = true; // is an intersection?
+    double t = 0; // will hold distance
+    bool is_inter = true; // is an intersection
     Vector u = r.direction; // direction of ray
     Vector O = r.origin; // origin of ray
     Vector C = this->center; // center of sphere 
     double R = this->radius; // radius of sphere
 
-    //????
+    
     auto delta = pow(dot(u, O - C), 2) - ((pow(norm(O - C), 2)) - pow(R, 2)); 
 
     if (delta < 0){  
@@ -31,8 +31,8 @@ Intersection Sphere::intersect(const Ray& r){
         // auto means it infers the type for you
         auto sqrtdelta =sqrt(delta);
         auto t_temp = dot(u, C - O); // direction (dot) (center - origin)
-        auto t1 = t_temp - sqrtdelta; // solving quadratic equation??
-        auto t2 = t_temp + sqrtdelta; // solving quadratic equation??
+        auto t1 = t_temp - sqrtdelta; // solving quadratic equation
+        auto t2 = t_temp + sqrtdelta; // solving quadratic equation
 
         if (t2 < 0){
             // imaginary numbers RAY E
@@ -50,7 +50,7 @@ Intersection Sphere::intersect(const Ray& r){
             t = t2;
         }
 
-        double distance = t; // ??
+        double distance = t; 
         Vector vec = O + t * u; // origin vector + t*direction
 
         auto temp = vec - C; // 

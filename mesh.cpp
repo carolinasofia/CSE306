@@ -34,24 +34,12 @@ public:
 		translate(Vector(0,-10,0));
 		std::cout<<"Object scaled and translated"<<std::endl;
 	}
-	TriangleMesh(Vector A = Vector(0,0,0),std::string surface = "diffuse", double n = 0) {
-		Vector albedo = A;
-		vertexcolors.push_back(A); // add colour to vertexcolours
-        if (surface == "mirror") mirror = true;
-        if (surface == "transparent") transparent = true;
-        refIndex = n; // refraction index
-		//make a triangle
-		indices.push_back(TriangleIndices(0,1,2));
-		vertices.push_back(Vector(1,1,1));
-		vertices.push_back(Vector(1,2,1));
-		vertices.push_back(Vector(2,2,1));
-
-	};
+	
 
 	std::vector<TriangleIndices> indices; // holds the index of each vertex
 	std::vector<Vector> vertices; //holds the vector of each vertice
 	std::vector<Vector> normals; //holds the normals
-	std::vector<Vector> uvs; // holds uv coordinates??
+	std::vector<Vector> uvs; // holds uv coordinates
 	std::vector<Vector> vertexcolors; // holds the albedos
 
 	Intersection intersect(const Ray& r){

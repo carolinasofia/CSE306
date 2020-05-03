@@ -10,7 +10,7 @@
 // returns an Intersection object between the ray and the scene
 Intersection Scene::intersection(const Ray& r){
     int n = content.size(); //
-    double min_d = inf; // minimum distance == infinity??
+    double min_d = inf; // minimum distance == infinity
     Intersection res; // 
     for (int i = 0;i<n;i++){
         // for every spheres intersect with the ray
