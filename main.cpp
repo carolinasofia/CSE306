@@ -94,9 +94,7 @@ int main()
             data[(i * W + j) * 3 + 0] = std::min(255., std::max(0., pow(colour[0], power) * 255));
             data[(i * W + j) * 3 + 1] = std::min(255., std::max(0., pow(colour[1], power) * 255));
             data[(i * W + j) * 3 + 2] = std::min(255., std::max(0., pow(colour[2], power) * 255));
-            std::cout << j << "  "; 
         }
-        std::cout << i << "  " ;
     }
 
     stbi_write_jpg("image.jpg", W, H, 3, data, 0);  
