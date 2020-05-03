@@ -30,19 +30,19 @@ int main()
     auto start = high_resolution_clock::now(); 
   
     //make spheres
-    Sphere* s_left = new Sphere(Vector(-21,0,0), 10, Vector(1,1,1));
-    Sphere* s_middle = new Sphere(Vector(0, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
+    Geometry* s_middle = new Sphere(Vector(0, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
+    Geometry* s_left = new Sphere(Vector(-21,0,0), 10, Vector(1,1,1));
 
-    Sphere* s_right = new Sphere(Vector(21, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
+    Geometry* s_right = new Sphere(Vector(21, 0, 0), 10, Vector(1, 1, 1),"transparent",1.5);
     // to make a hollow sphere
-    Sphere* s_right_hollow = new Sphere(Vector(21, 0, 0), 9, Vector(1, 1, 1),"transparent",1.5,true);
+    Geometry* s_right_hollow = new Sphere(Vector(21, 0, 0), 9, Vector(1, 1, 1),"transparent",1.5,true);
     // background spheres
-    Sphere* s_green = new Sphere(Vector(0, 0, -1000), 940, Vector(0, 1, 0));
-    Sphere* s_blue = new Sphere(Vector(0, -1000, 0), 990, Vector(0, 0, 1));
-    Sphere* s_magenta = new Sphere(Vector(0, 0, 1000), 940, Vector(1,0,1));
-    Sphere* s_red = new Sphere(Vector(0, 1000, 0), 940,Vector(1, 0, 0));
-    Sphere* s_cyan = new Sphere(Vector(-1000, 0, 0), 940, Vector(0, 1, 1));
-    Sphere* s_yellow = new Sphere(Vector(1000, 0, 0), 940, Vector(1, 1, 0));
+    Geometry* s_green = new Sphere(Vector(0, 0, -1000), 940, Vector(0, 1, 0));
+    Geometry* s_blue = new Sphere(Vector(0, -1000, 0), 990, Vector(0, 0, 1));
+    Geometry* s_magenta = new Sphere(Vector(0, 0, 1000), 940, Vector(1,0,1));
+    Geometry* s_red = new Sphere(Vector(0, 1000, 0), 940,Vector(1, 0, 0));
+    Geometry* s_cyan = new Sphere(Vector(-1000, 0, 0), 940, Vector(0, 1, 1));
+    Geometry* s_yellow = new Sphere(Vector(1000, 0, 0), 940, Vector(1, 1, 0));
 
     Vector Q = Vector(0,0,55);          // center of camera
     double alpha = 60;                  // field of view
@@ -53,22 +53,17 @@ int main()
     // make the light
     Light L = Light(Vector(-10,20,40),pow(10,5));
     
-    //TriangleMesh m = TriangleMesh();
+    Geometry* m = new TriangleMesh(Vector(1,1,0),"diffuse",2);
+    Geometry* cat = new TriangleMesh("cat.obj",H,W);
+    
+    
     //make the scene
-    std::vector<Geometry*> content;
-    content.push_back( (Geometry *) s_middle); // populate it like this
-    content.push_back( (Geometry *) s_left); // populate it like this
-    content.push_back( (Geometry *) s_right_hollow); // populate it like this
-    content.push_back( (Geometry *) s_right); // populate it like this
-    content.push_back( (Geometry *) s_green); // populate it like this
-    content.push_back( (Geometry *) s_blue); // populate it like this
-    content.push_back( (Geometry *) s_magenta); // populate it like this
-    content.push_back( (Geometry *) s_red); // populate it like this
-    content.push_back( (Geometry *) s_cyan); // populate it like this
-    content.push_back( (Geometry *) s_yellow); // populate it like this
-    Scene scene = Scene(content, L);
+    //Scene scene = Scene({s_middle,s_left,s_right,s_green,s_blue,s_magenta,s_red,s_cyan,s_yellow,m}, L);
+    //Scene scene = Scene({m}, L);
+    Scene scene = Scene({s_green,s_blue,s_magenta,s_red,s_cyan,s_yellow,cat}, L);
 
-    int max_path_length = 10; // needed for eg mirrors for where the ray bounces to
+
+    int max_path_length = 2; // needed for eg mirrors for where the ray bounces to
     unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)
     
     //for every pixel in the image
@@ -81,7 +76,7 @@ int main()
                 //Fresnel
                 //list to hold all the colours
                 std::list<Vector> colours;
-                for (int k = 0; k <40; k++){
+                for (int k = 0; k <10; k++){
                     //send K rays
                     Vector randomdir = boxMuller();//BOXMULLER
                     Vector newdir = direction + randomdir;
@@ -102,7 +97,7 @@ int main()
         }
     }
 
-    stbi_write_jpg("image.jpg", W, H, 3, data, 0);
+    stbi_write_jpg("image.jpg", W, H, 3, data, 0);  
  
     // Get ending timepoint 
     auto stop = high_resolution_clock::now(); 

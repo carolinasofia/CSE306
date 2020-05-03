@@ -20,7 +20,7 @@ class Scene{
             content = G;
             light = L;
             for (int i = 0; i < content.size(); i++){
-                // for every sphere make their index their index in the sphere list??
+                // for every sphere make their index their index in the sphere list
                 content[i]->index = i;
             }
         }

@@ -1,11 +1,10 @@
+#pragma once
 // imports
 #include "scene.hpp"
 #include "sphere.hpp"
 #include "math.h"
 #include <random>
-// for uniform random generation
-static std::default_random_engine engine(10); // random seed = 10
-static std::uniform_real_distribution<double> uniform(0, 1);
+
 
 // definition of function intersection in the class Scene
 // returns an Intersection object between the ray and the scene
@@ -27,51 +26,13 @@ Intersection Scene::intersection(const Ray& r){
     }
     return res;
 }
-Vector random_cos(const Vector &N){
-    double r1 = uniform(engine);
-    double r2 = uniform(engine);
-
-    double RHS = sqrt(1-r2);
-
-    double x = cos(2*PI*r1)*RHS;
-    double y = sin(2*PI*r1)*RHS;
-    double z = sqrt(r2);
-
-    // detect the smallest component of N in absolute value
-    double minN = std::min(std::min(abs(N[0]), abs(N[1])), abs(N[2]));
-    
-    Vector t1;
-    // find it and force it to be zero
-    for (int i = 0; i<3;i++){
-        //swap the two other components
-        //negate one of them to produce t1
-        if(abs(N[i]) == minN){
-            if(i == 0){
-                t1 = Vector(0,N[2],-N[1]);
-            }
-            else if(i==1){
-                t1 = Vector(N[2],0,-N[0]);
-            }
-            else{
-                t1 = Vector(N[1],-N[0],0);
-            }
-        }
-    }
-    
-    //normalize t1
-    t1 = normalization(t1);
-    //obtain t2 by cross product between N and t1
-    Vector t2 = cross(N,t1);
-    //random vector = xt1 + yT2 + zN 
-    return (x * t1) + (y*t2) + (z*N);
-
-}
 
 Vector Scene::getColour(const Ray& r, int ray_depth){
     if (ray_depth < 0){
         // base case
         return Vector(0.,0.,0.);
     }
+    
 
     Intersection inter = this->intersection(r); // intersection between the ray and this.scene
 
@@ -79,7 +40,6 @@ Vector Scene::getColour(const Ray& r, int ray_depth){
     Vector P = inter.position + N*0.01; // offset the reflected ray slightly to minimise noise
 
     if (inter.is_intersection){
-
         // if there is an intersection
         if (content[inter.index]->mirror){
             //if the sphere is a mirror

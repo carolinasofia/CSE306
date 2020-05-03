@@ -22,7 +22,18 @@ public:
 
 class TriangleMesh : public Geometry{
 public:
+	int H;
+	int W;
   ~TriangleMesh() {}
+	TriangleMesh(const char* obj, int h, int w){
+		H=h;
+		W=w;
+		readOBJ(obj);
+		std::cout<<"Object loaded"<<std::endl;
+		scale(0.6);
+		translate(Vector(0,-10,0));
+		std::cout<<"Object scaled and translated"<<std::endl;
+	}
 	TriangleMesh(Vector A = Vector(0,0,0),std::string surface = "diffuse", double n = 0) {
 		Vector albedo = A;
 		vertexcolors.push_back(A); // add colour to vertexcolours
@@ -65,7 +76,7 @@ public:
 			auto denom = dot(u,N);
 
 			auto beta = dot(e2,temp1)/denom;
-			auto gamma = dot(e1,temp1)/denom;
+			auto gamma = -(dot(e1,temp1)/denom);
 			auto alpha = 1 - beta - gamma;
 			auto t = dot((A-O),N)/denom;
 
@@ -73,13 +84,36 @@ public:
 				if(t < min_d){
                 // if the distance is smaller than others
                 min_d = t;
+				
 				normal = alpha*normals[temp.ni] + beta*normals[temp.nj] + gamma*normals[temp.nk];
+
+				//calculate albedo
+				albedo = Vector(255,255,255);
+				// Vector position = alpha*uvs[temp.uvi] + beta*uvs[temp.uvj] + gamma*uvs[temp.uvk];
+				// auto x = position[0] - std::floor(position[0]);
+				// auto y = position[1] - std::floor(position[1]);
+				// int X = (int) x*W*H;
+				// int Y = (int) y*W;
+				// std::cout << X+Y <<std::endl;
+				// albedo = vertexcolors.at(X+Y); 
             	}
 			}
 
 		}
         Vector vec = O + min_d * u; // origin vector + t*direction
 		return Intersection(true,vec,normal,min_d,index);
+	}
+
+	void scale(double scale){
+		for(int i =0; i<vertices.size();i++){
+			vertices[i]= vertices[i]*scale;
+		}
+	}
+
+	void translate(Vector v){
+		for(int i =0; i<vertices.size();i++){
+			vertices[i]= vertices[i]+v;
+		}
 	}
 
 

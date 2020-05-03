@@ -13,7 +13,7 @@ class Geometry{
         double refIndex; // refraction index
         int index; // its place in the scene
         bool sphere; //is it a sphere
-
+        
         virtual Intersection intersect (const Ray& r) = 0;
 
 }; 
