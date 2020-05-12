@@ -30,8 +30,9 @@ public:
 		W=w;
 		readOBJ(obj);
 		std::cout<<"Object loaded"<<std::endl;
-		scale(0.6);
-		translate(Vector(0,-10,0));
+		scale(10);
+		//translate(Vector(0,-10,0));
+		translate(Vector(0,20,0));
 		std::cout<<"Object scaled and translated"<<std::endl;
 	}
 	

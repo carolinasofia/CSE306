@@ -54,16 +54,16 @@ int main()
     Light L = Light(Vector(-10,20,40),pow(10,5));
     
     //Geometry* m = new TriangleMesh(Vector(1,1,0),"diffuse",2);
-    Geometry* cat = new TriangleMesh("cat.obj",H,W);
+    Geometry* cat = new TriangleMesh("davyjones.obj",H,W);
     
     
     //make the scene
     //Scene scene = Scene({s_middle,s_left,s_right,s_green,s_blue,s_magenta,s_red,s_cyan,s_yellow,m}, L);
-    //Scene scene = Scene({m}, L);
-    Scene scene = Scene({s_green,s_blue,s_magenta,s_red,s_cyan,s_yellow,cat}, L);
+    Scene scene = Scene({cat}, L);
+    //Scene scene = Scene({s_green,s_blue,s_magenta,s_red,s_cyan,s_yellow,cat}, L);
 
 
-    int max_path_length = 5; // needed for eg mirrors for where the ray bounces to
+    int max_path_length = 2; // needed for eg mirrors for where the ray bounces to
     unsigned char data[W * H * 3]; //array of size w*h*3 (because 3 colours)
     
     //for every pixel in the image
@@ -76,7 +76,7 @@ int main()
                 //Fresnel
                 //list to hold all the colours
                 std::list<Vector> colours;
-                for (int k = 0; k <32; k++){
+                for (int k = 0; k <1; k++){
                     //send K rays
                     Vector randomdir = boxMuller();//BOXMULLER
                     Vector newdir = direction + randomdir;
@@ -91,9 +91,9 @@ int main()
 
             //GAMMA CORRECTION
             double power = 1. / 2.2;
-            data[(i * W + j) * 3 + 0] = std::min(255., std::max(0., pow(colour[0], power) * 255));
-            data[(i * W + j) * 3 + 1] = std::min(255., std::max(0., pow(colour[1], power) * 255));
-            data[(i * W + j) * 3 + 2] = std::min(255., std::max(0., pow(colour[2], power) * 255));
+            data[(i * W + j) * 3 + 0] = std::min(255., std::max(0., pow(colour[0], power) * 255)); //R
+            data[(i * W + j) * 3 + 1] = std::min(255., std::max(0., pow(colour[1], power) * 255)); //G
+            data[(i * W + j) * 3 + 2] = std::min(255., std::max(0., pow(colour[2], power) * 255)); //B
         }
     }
 
