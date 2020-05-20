@@ -7,4 +7,8 @@
 class Polygon {  
 public:
     std::vector<Vector> vertices;
+    Polygon(std::vector<Vector> v){
+        vertices = v;
+    }
+    Polygon(){};
 }; 

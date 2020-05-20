@@ -107,10 +107,28 @@ Vector intersect(Vector prevVertex, Vector curVertex, Vector edgeV1, Vector edge
     Vector N = Vector(edgeV2[1] - edgeV1[1], edgeV1[0]-edgeV2[0],0); // normal to the line (u,v) = (vy - uy,ux - vx)
     auto t = dot((edgeV1-prevVertex),N) / dot((curVertex-prevVertex),N);
     if (t < 0 || t>1){
-        std::cout << "T IS WRONG?" << std::endl;
+        std::cout << "T IS WRONG?" << " = " << t << std::endl;
     }
     P = prevVertex + t*(curVertex - prevVertex);
     return P;
+}
+
+Vector intersectVoronoi(Vector A, Vector B, Vector Pi, Vector Pj){
+    Vector P; // point of intersection
+    Vector M = (Pi + Pj)/2;
+    auto t = dot((M-A),(Pi-Pj))/dot((B-A),(Pi-Pj));
+    P = A + t*(B-A);
+    return P;
+}
+
+bool insideVoronoi(Vector X, Vector Pi, Vector Pj){
+    Vector M = (Pi + Pj)/2;
+    if(dot((X-M),(Pj-Pi))<0){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 bool inside(Vector P, Vector edgeV1, Vector edgeV2){
