@@ -9,11 +9,13 @@ using namespace std::chrono;
 #include "vector.hpp"
 #include "polygon.hpp"
 #include "tools.hpp"
+#include <chrono>
+using namespace std::chrono;
 
 
 int main()
 {
-    
+    auto start = high_resolution_clock::now();
     //create subject polygon
     Polygon subjectPolygon = Polygon({Vector(0,0,0),Vector(0.2,0.2,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)});
 
@@ -33,7 +35,10 @@ int main()
     Polygon samples = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)});
 
     save_svg(samples,voronoi(samples),"voronoi.svg");
-
+    auto stop = high_resolution_clock::now();
+    auto duration = duration_cast<microseconds>(stop - start);
+    duration = duration / 1000;
+    std::cout << "Time taken: " << duration.count() << " ms" << std::endl;
     std::cout<< "Done";
     return 0; 
 }
