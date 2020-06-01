@@ -33,8 +33,13 @@ int main()
 
     //VORONOI
     Polygon samples = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)});
-
     save_svg(samples,voronoi(samples),"voronoi.svg");
+
+    //POWER DIAGRAM
+    Polygon samples1 = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)},{0.01,0.03,0.05,0.03});
+    save_svg(samples1,powerVoronoi(samples1),"power.svg");
+
+
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
     duration = duration / 1000;

@@ -101,7 +101,7 @@ Vector average(std::list<Vector> colours){
     //divide by size of list
     return result/n;
 }
-
+//for sutherland
 Vector intersect(Vector prevVertex, Vector curVertex, Vector edgeV1, Vector edgeV2){
     Vector P; // point of intersection
     Vector N = Vector(edgeV2[1] - edgeV1[1], edgeV1[0]-edgeV2[0],0); // normal to the line (u,v) = (vy - uy,ux - vx)
@@ -112,25 +112,7 @@ Vector intersect(Vector prevVertex, Vector curVertex, Vector edgeV1, Vector edge
     P = prevVertex + t*(curVertex - prevVertex);
     return P;
 }
-
-Vector intersectVoronoi(Vector A, Vector B, Vector Pi, Vector Pj){
-    Vector P; // point of intersection
-    Vector M = (Pi + Pj)/2;
-    auto t = dot((M-A),(Pi-Pj))/dot((B-A),(Pi-Pj));
-    P = A + t*(B-A);
-    return P;
-}
-
-bool insideVoronoi(Vector X, Vector Pi, Vector Pj){
-    Vector M = (Pi + Pj)/2;
-    if(dot((X-M),(Pj-Pi))<0){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-
+//for sutherland
 bool inside(Vector P, Vector edgeV1, Vector edgeV2){
     Vector N = Vector(edgeV2[1] - edgeV1[1], edgeV1[0]-edgeV2[0],0); // normal to the line (u,v) = (vy - uy,ux - vx)
     if(dot((P-edgeV1),N)<=0){
@@ -140,3 +122,40 @@ bool inside(Vector P, Vector edgeV1, Vector edgeV2){
         return false;
     }
 }
+//for voronoi
+Vector intersectVoronoi(Vector A, Vector B, Vector Pi, Vector Pj){
+    Vector P; // point of intersection
+    Vector M = (Pi + Pj)/2;
+    auto t = dot((M-A),(Pi-Pj))/dot((B-A),(Pi-Pj));
+    P = A + t*(B-A);
+    return P;
+}
+//for voronoi
+bool insideVoronoi(Vector X, Vector Pi, Vector Pj){
+    Vector M = (Pi + Pj)/2;
+    if(dot((X-M),(Pj-Pi))<0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+//for power diagram
+Vector intersectPower(Vector A, Vector B, Vector Pi, Vector Pj,double wi,double wj){
+    Vector P; // point of intersection
+    Vector M = ((Pi + Pj)/2) + (((wi-wj)/(2*(pow(norm(Pi-Pj),2))))*(Pi-Pj));
+    auto t = dot((M-A),(Pi-Pj))/dot((B-A),(Pi-Pj));
+    P = A + t*(B-A);
+    return P;
+}
+//for power diagram
+bool insidePower(Vector X, Vector Pi, Vector Pj,double wi,double wj){
+    Vector M = ((Pi + Pj)/2) + (((wi-wj)/(2*(pow(norm(Pi-Pj),2))))*(Pi-Pj));
+    if(dot((X-M),(Pj-Pi))<0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+

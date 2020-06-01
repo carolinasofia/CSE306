@@ -77,6 +77,51 @@ std::vector<Polygon> voronoi(Polygon samples){
     return voronoiDiagram;
 }
 
+std::vector<Polygon> powerVoronoi(Polygon samples){
+    std::vector<Polygon> powerDiagram; // holds all power cells
+    Polygon powerCell; 
+    Polygon bigQuad = Polygon({Vector(0,0,0),Vector(0,1,0),Vector(1,1,0),Vector(1,0,0)});
+
+    for (int i = 0; i < samples.vertices.size();i++){ //for every sample
+        //for each sample
+        Vector samplei = samples.vertices[i];
+        double wi = pow(samples.radii[i],2);
+        powerCell = bigQuad; //make polygon to hold its voronoi cell starting off as the quadrilateral
+        
+        // find the bisector with the all other samples and use the sutherland thingy
+        for (int j = 0; j <samples.vertices.size(); j++){
+            if(j!=i){
+                //for all other samples
+                Vector samplej = samples.vertices[j];
+                double wj = pow(samples.radii[j],2);
+                Polygon tempPoly = Polygon();
+                for (int i = 0; i < powerCell.vertices.size();i++){ // for each vertex of the subject polygon
+                    // make an edge
+                    Vector curVertex = powerCell.vertices[i]; 
+                    Vector prevVertex = powerCell.vertices[(i>0)?(i-1):powerCell.vertices.size()-1];
+                    // compute intersection between the infinite line supported by clipEdge and edge (i-1,i)
+                    Vector intersection = intersectPower(prevVertex,curVertex,samplei,samplej,wi,wj);
+                    if (insidePower(curVertex,samplei,samplej,wi,wj)){
+                        if (!insidePower(prevVertex,samplei,samplej,wi,wj)){
+                            // the subject polygon edge crosses the clip edge, and we leave the clipping area
+                            tempPoly.vertices.push_back(intersection);
+                        }
+                        tempPoly.vertices.push_back(curVertex);
+                    }
+                    else if (insidePower(prevVertex,samplei,samplej,wi,wj)){
+                        // the subject polygon edge crosses the clip edge, and we enter the clipping area
+                        tempPoly.vertices.push_back(intersection);
+                    }
+                }
+                powerCell = tempPoly;
+            }
+        }
+        powerDiagram.push_back(powerCell);
+    }
+    return powerDiagram;
+}
+
+// saves a static svg file. The polygon vertices are supposed to be in the range [0..1], and a canvas of size 1000x1000 is created
 void save_svg(const std::vector<Polygon> &polygons, std::string filename, std::string fillcol = "none") {
         FILE* f = fopen(filename.c_str(), "w+");
         fprintf(f, "<svg xmlns = \"http://www.w3.org/2000/svg\" width = \"1000\" height = \"1000\">\n");
@@ -112,6 +157,54 @@ void save_svg(const Polygon &vectors, const std::vector<Polygon> &polygons,std::
         fprintf(f, "</g>\n");
     }
     fprintf(f, "</svg>\n");
+    fclose(f);
+}
+
+// Adds one frame of an animated svg file. frameid is the frame number (between 0 and nbframes-1).
+// polygons is a list of polygons, describing the current frame.
+// The polygon vertices are supposed to be in the range [0..1], and a canvas of size 1000x1000 is created
+void save_svg_animated(const std::vector<Polygon> &polygons, std::string filename, int frameid, int nbframes) {
+    FILE* f;
+    if (frameid == 0) {
+        f = fopen(filename.c_str(), "w+");
+        fprintf(f, "<svg xmlns = \"http://www.w3.org/2000/svg\" width = \"1000\" height = \"1000\">\n");
+        fprintf(f, "<g>\n");
+    } else {
+        f = fopen(filename.c_str(), "a+");
+    }
+    fprintf(f, "<g>\n");
+    for (int i = 0; i < polygons.size(); i++) {
+        fprintf(f, "<polygon points = \"");
+        for (int j = 0; j < polygons[i].vertices.size(); j++) {
+            fprintf(f, "%3.3f, %3.3f ", (polygons[i].vertices[j][0] * 1000), (1000-polygons[i].vertices[j][1] * 1000));
+        }
+        fprintf(f, "\"\nfill = \"none\" stroke = \"black\"/>\n");
+    }
+    fprintf(f, "<animate\n");
+    fprintf(f, "    id = \"frame%u\"\n", frameid);
+    fprintf(f, "    attributeName = \"display\"\n");
+    fprintf(f, "    values = \"");
+    for (int j = 0; j < nbframes; j++) {
+        if (frameid == j) {
+            fprintf(f, "inline");
+        } else {
+            fprintf(f, "none");
+        }
+        fprintf(f, ";");
+    }
+    fprintf(f, "none\"\n    keyTimes = \"");
+    for (int j = 0; j < nbframes; j++) {
+        fprintf(f, "%2.3f", j / (double)(nbframes));
+        fprintf(f, ";");
+    }
+    fprintf(f, "1\"\n   dur = \"5s\"\n");
+    fprintf(f, "    begin = \"0s\"\n");
+    fprintf(f, "    repeatCount = \"indefinite\"/>\n");
+    fprintf(f, "</g>\n");
+    if (frameid == nbframes - 1) {
+        fprintf(f, "</g>\n");
+        fprintf(f, "</svg>\n");
+    }
     fclose(f);
 }
 
