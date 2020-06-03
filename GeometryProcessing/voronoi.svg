@@ -1,0 +1,26 @@
+<svg xmlns = "http://www.w3.org/2000/svg" width = "1000" height = "1000">
+<g>
+<polygon points = "200.000, 800.000 200.000, 850.000 125.000, 1000.000 0.000, 1000.000 0.000, 600.000 "
+fill = "none" stroke = "black"/>
+</g>
+<g>
+<polygon points = "200.000, 800.000 0.000, 600.000 0.000, 0.000 1000.000, 0.000 "
+fill = "none" stroke = "black"/>
+</g>
+<g>
+<polygon points = "200.000, 850.000 200.000, 800.000 1000.000, 0.000 1000.000, 850.000 "
+fill = "none" stroke = "black"/>
+</g>
+<g>
+<polygon points = "125.000, 1000.000 200.000, 850.000 1000.000, 850.000 1000.000, 1000.000 "
+fill = "none" stroke = "black"/>
+</g>
+<g>
+<circle cx = "100.000" cy = "800.000" r="5"/></g>
+<g>
+<circle cx = "200.000" cy = "700.000" r="5"/></g>
+<g>
+<circle cx = "300.000" cy = "800.000" r="5"/></g>
+<g>
+<circle cx = "300.000" cy = "900.000" r="5"/></g>
+</svg>

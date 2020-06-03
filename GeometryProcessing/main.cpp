@@ -9,6 +9,7 @@ using namespace std::chrono;
 #include "vector.hpp"
 #include "polygon.hpp"
 #include "tools.hpp"
+#include "util.hpp"
 #include <chrono>
 using namespace std::chrono;
 
@@ -36,9 +37,15 @@ int main()
     save_svg(samples,voronoi(samples),"voronoi.svg");
 
     //POWER DIAGRAM
-    Polygon samples1 = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)},{0.01,0.03,0.05,0.03});
+    Polygon samples1 = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)},{0.01,0.3,0.05,0.03});
     save_svg(samples1,powerVoronoi(samples1),"power.svg");
 
+
+    //LBFGS
+    Polygon samples2 = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)});
+    std::vector<double> lambdas = {0.3,0.3,0.4,0.3}; // 'amount of bread per bakery'
+    samples2.radii = semiOptimal(samples2,lambdas);
+    save_svg(samples2,powerVoronoi(samples2),"lbfgs.svg");
 
     auto stop = high_resolution_clock::now();
     auto duration = duration_cast<microseconds>(stop - start);
