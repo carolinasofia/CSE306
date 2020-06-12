@@ -6,6 +6,9 @@
 #include <vector>
 #include <random>
 
+static std::default_random_engine engine(time(0)); //GUILLAUME LORANCHET INFORMED ABOUT HOW TO USE TIME(0)
+static std::uniform_real_distribution<double> uniform(0, 1);
+
 
 class Vector{
     private:
@@ -157,5 +160,16 @@ bool insidePower(Vector X, Vector Pi, Vector Pj,double wi,double wj){
     else{
         return false;
     }
+}
+
+std::vector<Vector> randomSamples(int size){
+    std::vector<Vector> result;
+    double x,y;
+    for (int i = 0; i < size;i++){
+        x = uniform(engine);
+        y = uniform(engine);
+        result.push_back(Vector(x,y,0));
+    }
+    return result;
 }
 
