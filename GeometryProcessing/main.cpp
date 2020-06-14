@@ -9,7 +9,7 @@ using namespace std::chrono;
 #include "vector.hpp"
 #include "polygon.hpp"
 #include "tools.hpp"
-//#include "util.hpp"
+#include "util.hpp"
 #include <chrono>
 using namespace std::chrono;
 
@@ -46,10 +46,10 @@ int main()
 
 
     //LBFGS
-    // Polygon samples2 = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)});
-    // std::vector<double> lambdas = {0.25,0.25,0.25,0.25}; // 'amount of bread per bakery'
-    // samples2.radii = semiOptimal(samples2,lambdas);
-    // save_svg(samples2,powerVoronoi(samples2),"lbfgs.svg");
+    Polygon samples2 = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)});
+    std::vector<double> lambdas = {0.25,0.25,0.25,0.25}; // 'amount of bread per bakery'
+    samples2.radii = semiOptimal(samples2,lambdas);
+    save_svg(samples2,powerVoronoi(samples2),"lbfgs.svg");
 
     //FLUID SIMULATION
     Polygon air = Polygon();

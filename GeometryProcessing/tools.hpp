@@ -12,10 +12,10 @@ Polygon sutherland(Polygon subjectPolygon, Polygon clipPolygon){
         Vector clipEdgeV1 = clipPolygon.vertices[i]; //clip edge vertex1
         Vector clipEdgeV2 = clipPolygon.vertices[(i>0)?(i-1):clipPolygon.vertices.size()-1]; //clip edge vertex2
         outPolygon = Polygon();
-        for (int i = 0; i < subjectPolygon.vertices.size();i++){ // for each vertex of the subject polygon
+        for (int j = 0; j < subjectPolygon.vertices.size();j++){ // for each vertex of the subject polygon
             // make an edge
-            Vector curVertex = subjectPolygon.vertices[i]; 
-            Vector prevVertex = subjectPolygon.vertices[(i>0)?(i-1):subjectPolygon.vertices.size()-1];
+            Vector curVertex = subjectPolygon.vertices[j]; 
+            Vector prevVertex = subjectPolygon.vertices[(j>0)?(j-1):subjectPolygon.vertices.size()-1];
             // compute intersection between the infinite line supported by clipEdge and edge (i-1,i)
             Vector intersection = intersect(prevVertex,curVertex,clipEdgeV1,clipEdgeV2);
             if (inside(curVertex,clipEdgeV1,clipEdgeV2)){
@@ -81,7 +81,7 @@ std::vector<Polygon> powerVoronoi(Polygon samples){
     std::vector<Polygon> powerDiagram; // holds all power cells
     Polygon powerCell; 
     Polygon bigQuad = Polygon({Vector(0,0,0),Vector(0,1,0),Vector(1,1,0),Vector(1,0,0)});
-
+    
     for (int i = 0; i < samples.vertices.size();i++){ //for every sample
         //for each sample
         Vector samplei = samples.vertices[i];

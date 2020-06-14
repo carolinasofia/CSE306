@@ -16,26 +16,26 @@ lbfgsfloatval_t evaluate(
         lbfgsfloatval_t fx = 0.0;
 
         
-//     auto vInstance = (VoronoiInstance *) instance;
-//     auto points = vInstance->points;
-//     auto lambda = vInstance->lambda;
-//     auto boundingBox = vInstance->boundingBox;
-//     assert((points.size() == n));
-//     assert((lambda.size() == n));
+        auto voronoiInstance = (VoronoiDiagram *) instance;
+        auto points = voronoiInstance->points.vertices;
+        auto lambdas = voronoiInstance->lambdas;
+        //auto boundingBox = voronoiInstance->boundingBox;
 
-//     for(int i = 0; i < n; i++) points[i][2] = x[i];
-//     auto voronois = voronoi(points, boundingBox);
-//     for(int i = 0; i < n; i++) {voronois[i].print();
-//     for(int i = 0; i < n; i++) points[i][2] = 0;
-//     lbfgsfloatval_t fx = 0.0;
-//     for(int i = 0; i < n; i++) {
-//         float T = abs(voronois[i].area()); //area of triangle
-//         g[i] = T - lambda[i]; //differential
-//         fx += x[i] * g[i] - voronois[i].distanceIntegral(points[i]);
-//         //fx += lambda[i] * x[i]; //last term of function
-//         //fx -= T * x[i]; //integral of wi over the triangle
-//     }
 
+        for(int i = 0; i < n; i++) {
+                points[i][2] = x[i];
+        }
+        auto voronoiDiagram = voronoi(points);
+    
+        double sx = 0;
+
+        for(int i = 0; i < n; i++) {
+                float T = abs(voronoiDiagram[i].area());
+                sx += T;
+                g[i] = T - lambdas[i];
+                float aT = voronoiDiagram[i].distanceIntegral(points[i]);
+                fx += x[i] * g[i] - abs(aT);
+        }
         
         return fx;
 }
@@ -78,11 +78,12 @@ std::vector<double> semiOptimal(Polygon samples, std::vector<double> lambdas){
                 m_x[i+1] = 1.0;
         }
         //*****************************************************//
-
-        // 'this' from the sample code is the instance.
+        //auto boundingBox = bigQuad(samples); 
+        Polygon boundingBox = Polygon({Vector(0,0,0),Vector(0,1,0),Vector(1,1,0),Vector(1,0,0)}); 
+        auto instance = new VoronoiDiagram(samples,boundingBox,lambdas);
 
         //Call lbfgs            
-        int ret = lbfgs(N, m_x, &fx, evaluate, progress, NULL, NULL);
+        int ret = lbfgs(N, m_x, &fx, evaluate, progress, instance, NULL);
         
         std::vector<double> weights(N);
         // have to do a for loop instead of a = since they are different types
@@ -96,65 +97,65 @@ std::vector<double> semiOptimal(Polygon samples, std::vector<double> lambdas){
 //Polygon X = positions
 //double V = velocity
 //double m = mass
-std::vector<Polygon,std::vector<double>> gallouetMerigot(Polygon X,std::vector<Vector> V, std::vector<double> m){
-        //std::vector<double> uniform = ;
-        std::vector<double> v_weights = semiOptimal(X,uniform); 
+// std::vector<Polygon,std::vector<double>> gallouetMerigot(Polygon X,std::vector<Vector> V, std::vector<double> m){
+//         //std::vector<double> uniform = ;
+//         std::vector<double> v_weights = semiOptimal(X,uniform); 
 
-        Polygon X_prime;
-        std::vector<Vector> v_prime;
+//         Polygon X_prime;
+//         std::vector<Vector> v_prime;
 
-        int N = X.vertices.size();
+//         int N = X.vertices.size();
 
-        double e = 0.004;
-        double dt = 0.002;
-        Vector g = Vector(0,-9.81,0); 
+//         double e = 0.004;
+//         double dt = 0.002;
+//         Vector g = Vector(0,-9.81,0); 
 
-        for (int i = 0;i<N;i++){ //for each particle
-                 auto F_spring = (1/pow(e,2)) * (Centroid(,v_weights[i]) - X.vertices[i])); //TODO add the cell for that particle
-                auto F = F_spring + g;
-                v_prime[i] = V[i] + (dt/m[i])*F;
-                X_prime.vertices[i]= X.vertices[i] + dt*V[i];
-        }
+//         for (int i = 0;i<N;i++){ //for each particle
+//                  auto F_spring = (1/pow(e,2)) * (Centroid(,v_weights[i]) - X.vertices[i])); //TODO add the cell for that particle
+//                 auto F = F_spring + g;
+//                 v_prime[i] = V[i] + (dt/m[i])*F;
+//                 X_prime.vertices[i]= X.vertices[i] + dt*V[i];
+//         }
         
-        std::vector<Polygon,std::vector<double>> result = {X_prime,v_prime};
+//         std::vector<Polygon,std::vector<double>> result = {X_prime,v_prime};
 
-        return result;
-} 
+//         return result;
+// } 
 
-Vector Centroid(std::vector<Vector> vertices, double){
-        double CX,CY;
-        int N = vertices.size();
+// Vector Centroid(std::vector<Vector> vertices, double){
+//         double CX,CY;
+//         int N = vertices.size();
 
-        double sumArea = 0.0;
-        for (int i=0;i<N;i++){
-                double xi = vertices[i][0];
-                double yi = vertices[i][1];
-                double xii = vertices[i+1][0];
-                double yii = vertices[i+1][1];
+//         double sumArea = 0.0;
+//         for (int i=0;i<N;i++){
+//                 double xi = vertices[i][0];
+//                 double yi = vertices[i][1];
+//                 double xii = vertices[i+1][0];
+//                 double yii = vertices[i+1][1];
 
-                sumArea = sumArea + ((xi*yii) - (xii-yi));
-        }
-        auto A = 0.5 * sumArea;
+//                 sumArea = sumArea + ((xi*yii) - (xii-yi));
+//         }
+//         auto A = 0.5 * sumArea;
 
-        double sumCX = 0.0;
-        for (int i=0;i<N;i++){
-                double xi = vertices[i][0];
-                double yi = vertices[i][1];
-                double xii = vertices[i+1][0];
-                double yii = vertices[i+1][1];
-                sumCX = sumCX + ((xi + xii)*((xi*yii)-(xii*yi)));
-        }
-        CX = (1/A) * sumCX;
+//         double sumCX = 0.0;
+//         for (int i=0;i<N;i++){
+//                 double xi = vertices[i][0];
+//                 double yi = vertices[i][1];
+//                 double xii = vertices[i+1][0];
+//                 double yii = vertices[i+1][1];
+//                 sumCX = sumCX + ((xi + xii)*((xi*yii)-(xii*yi)));
+//         }
+//         CX = (1/A) * sumCX;
 
-        double sumCY = 0.0;
-        for (int i=0;i<N;i++){
-                double xi = vertices[i][0];
-                double yi = vertices[i][1];
-                double xii = vertices[i+1][0];
-                double yii = vertices[i+1][1];
-                sumCY = sumCY + ((yi + yii)*((xi*yii)-(xii*yi)));
-        }
-        CY = (1/A) * sumCY;
+//         double sumCY = 0.0;
+//         for (int i=0;i<N;i++){
+//                 double xi = vertices[i][0];
+//                 double yi = vertices[i][1];
+//                 double xii = vertices[i+1][0];
+//                 double yii = vertices[i+1][1];
+//                 sumCY = sumCY + ((yi + yii)*((xi*yii)-(xii*yi)));
+//         }
+//         CY = (1/A) * sumCY;
 
-        return Vector(cx,cy,0);
-}
+//         return Vector(CX,CY,0);
+// }
