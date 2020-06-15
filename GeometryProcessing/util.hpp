@@ -7,7 +7,7 @@
 
 lbfgsfloatval_t evaluate(
         void *instance,
-        const lbfgsfloatval_t *x,
+        const lbfgsfloatval_t *m_x,
         lbfgsfloatval_t *g,
         const int n,
         const lbfgsfloatval_t step
@@ -19,22 +19,23 @@ lbfgsfloatval_t evaluate(
         auto voronoiInstance = (VoronoiDiagram *) instance;
         auto points = voronoiInstance->points.vertices;
         auto lambdas = voronoiInstance->lambdas;
-        //auto boundingBox = voronoiInstance->boundingBox;
 
-
-        for(int i = 0; i < n; i++) {
-                points[i][2] = x[i];
-        }
-        auto voronoiDiagram = voronoi(points);
+        
+        auto voronoiDiagramCells = voronoi(points);
     
-        double sx = 0;
 
         for(int i = 0; i < n; i++) {
-                float T = abs(voronoiDiagram[i].area());
-                sx += T;
-                g[i] = T - lambdas[i];
-                float aT = voronoiDiagram[i].distanceIntegral(points[i]);
-                fx += x[i] * g[i] - abs(aT);
+                //get area of cell
+
+                //********************* Sebastians code **************************//
+                // Polygon cell = voronoiDiagramCells[i];
+                // double cellArea = abs(area(cell));
+
+
+                // g[i] = cellArea - lambdas[i];
+                // float aT = integral(voronoiDiagramCells[i],points[i]);
+                // fx += m_x[i] * g[i] - abs(aT);
+                // ****************************************************************//
         }
         
         return fx;
@@ -72,11 +73,6 @@ std::vector<double> semiOptimal(Polygon samples, std::vector<double> lambdas){
                 printf("ERROR: Failed to allocate a memory block for variables.\n");
                 //TODO : THROW ERROR
         }
-        // Initialize the variables
-        for (int i = 0;i < N;i += 2) {
-                m_x[i] = -1.2;
-                m_x[i+1] = 1.0;
-        }
         //*****************************************************//
         //auto boundingBox = bigQuad(samples); 
         Polygon boundingBox = Polygon({Vector(0,0,0),Vector(0,1,0),Vector(1,1,0),Vector(1,0,0)}); 
@@ -108,10 +104,10 @@ std::vector<double> semiOptimal(Polygon samples, std::vector<double> lambdas){
 
 //         double e = 0.004;
 //         double dt = 0.002;
-//         Vector g = Vector(0,-9.81,0); 
+//         Vector g = Vector(0,-9.81,0);  //gravity
 
 //         for (int i = 0;i<N;i++){ //for each particle
-//                  auto F_spring = (1/pow(e,2)) * (Centroid(,v_weights[i]) - X.vertices[i])); //TODO add the cell for that particle
+//                  auto F_spring = (1/pow(e,2)) * (Centroid(VW??) - X.vertices[i])); //TODO add the cell for that particle
 //                 auto F = F_spring + g;
 //                 v_prime[i] = V[i] + (dt/m[i])*F;
 //                 X_prime.vertices[i]= X.vertices[i] + dt*V[i];
@@ -127,7 +123,7 @@ Vector Centroid(std::vector<Vector> vertices){
         int N = vertices.size();
 
         auto A = area(Polygon(vertices));
-        
+
         double sumCX = 0.0;
         for (int i=0;i<N;i++){
                 double xi = vertices[i][0];
@@ -150,7 +146,6 @@ Vector Centroid(std::vector<Vector> vertices){
 
         return Vector(CX,CY,0);
 }
-
 // //TUTTE EMBEDDING
 // void tutteEmbedding (Polygon poly, Polygon boundaries){
 //         auto dm = boundaries.vertices;

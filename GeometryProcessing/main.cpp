@@ -2,6 +2,8 @@
 #include <iostream>
 #include "vector"
 #include "math.h"
+#include "lbfgs.h"
+#include "lbfgs.c"
 #include <list>
 #include <chrono>
 using namespace std::chrono; 
@@ -41,8 +43,8 @@ int main()
     //save_svg(ranSamples,voronoi(ranSamples),"voronoi200.svg");
 
     // //POWER DIAGRAM
-    Polygon samples1 = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)},{0.01,0.3,0.05,0.03});
-    save_svg(samples1,powerVoronoi(samples1),"power.svg");
+    // Polygon samples1 = Polygon({Vector(0.1,0.2,0),Vector(0.2,0.3,0),Vector(0.3,0.2,0),Vector(0.3,0.1,0)},{0.03,0.03,0.03,0.03});
+    // save_svg(samples1,powerVoronoi(samples1),"power.svg");
 
 
     //LBFGS
@@ -50,6 +52,9 @@ int main()
     std::vector<double> lambdas = {0.25,0.25,0.25,0.25}; // 'amount of bread per bakery'
     samples2.radii = semiOptimal(samples2,lambdas);
     save_svg(samples2,powerVoronoi(samples2),"lbfgs.svg");
+
+    // Polygon square = Polygon({Vector(0,0,0),Vector(0,1,0),Vector(1,1,0),Vector(1,0,0)});
+    // print(Centroid(square.vertices));
 
     //FLUID SIMULATION
     Polygon air = Polygon();

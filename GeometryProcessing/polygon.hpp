@@ -36,26 +36,28 @@ double area(Polygon p) {
     return A;
 }
 
-double distanceIntegral(Polygon p,Vector Pi) {
-    auto vertices = p.vertices;
-    if(!vertices.size()) return 0;
-    double I = 0;
-    Vector c[3];
-    c[0] = vertices[0];
-    for(int i = 1; i < int(vertices.size()) - 1; i ++) {
-        if(vertices[i][2] != 0) std::cout << "non zero z" << std::endl;
-        double x = 0;
-        c[1] = vertices[i];
-        c[2] = vertices[i+1];
-        for(int k = 0; k < 3; k ++) {
-            for(int l = k; l < 3; l ++) {
-                x += dot(c[k] - Pi, c[l] - Pi);
-            }
-        }
-        double T = cross(c[0] - c[1], c[2] - c[1])[2]/2;
-        I += T * x;
+double integral(Polygon poly,Vector Pi) {
+    double ans = 0.0;
+    auto vertices = poly.vertices;
+    int N = vertices.size();
+
+    double sum = 0.0;
+
+    for (int k = 1;k < N;k++){
+        auto Xk = vertices[k][0];
+        auto Xkk = vertices[k-1][0];
+        auto Yk = vertices[k][1];
+        auto Ykk = vertices[k-1][1];
+
+        double equ1 = ((Xkk*Yk)-(Xk*Ykk));
+        double equ2 = (pow(Xkk,2) + (Xkk*Xk) + pow(Xk,2) + pow(Ykk,2) + (Ykk*Yk) + pow(Yk,2));
+        double equ3 = (-4 * ((Pi[0]*(Xkk + Xk)) + (Pi[1] * (Ykk + Yk)))) + 6 * pow(norm(Pi),2);
+
+        sum = sum + (equ1 * (equ2 + equ3));
     }
-    return I / 6;
+   
+
+    return (1/12) * sum;
 }
 
 class VoronoiDiagram {
