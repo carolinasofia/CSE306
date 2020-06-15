@@ -122,40 +122,47 @@ std::vector<double> semiOptimal(Polygon samples, std::vector<double> lambdas){
 //         return result;
 // } 
 
-// Vector Centroid(std::vector<Vector> vertices, double){
-//         double CX,CY;
-//         int N = vertices.size();
+Vector Centroid(std::vector<Vector> vertices){
+        double CX,CY;
+        int N = vertices.size();
 
-//         double sumArea = 0.0;
-//         for (int i=0;i<N;i++){
-//                 double xi = vertices[i][0];
-//                 double yi = vertices[i][1];
-//                 double xii = vertices[i+1][0];
-//                 double yii = vertices[i+1][1];
+        auto A = area(Polygon(vertices));
+        
+        double sumCX = 0.0;
+        for (int i=0;i<N;i++){
+                double xi = vertices[i][0];
+                double yi = vertices[i][1];
+                double xii = vertices[(i+1)%N][0];
+                double yii = vertices[(i+1)%N][1];
+                sumCX = sumCX + ((xi + xii)*((xi*yii)-(xii*yi)));
+        }
+        CX = (1/(6*A)) * sumCX;
 
-//                 sumArea = sumArea + ((xi*yii) - (xii-yi));
+        double sumCY = 0.0;
+        for (int i=0;i<N;i++){
+                double xi = vertices[i][0];
+                double yi = vertices[i][1];
+                double xii = vertices[(i+1)%N][0];
+                double yii = vertices[(i+1)%N][1];
+                sumCY = sumCY + ((yi + yii)*((xi*yii)-(xii*yi)));
+        }
+        CY = (1/(6*A)) * sumCY;
+
+        return Vector(CX,CY,0);
+}
+
+// //TUTTE EMBEDDING
+// void tutteEmbedding (Polygon poly, Polygon boundaries){
+//         auto dm = boundaries.vertices;
+//         double s = 0;
+//         int n = boundaries.vertices.size(); //?
+//         for (int i = 0;i<n-1;i++){
+//                 s = s + (dm[i+1] - dm[i]);
 //         }
-//         auto A = 0.5 * sumArea;
-
-//         double sumCX = 0.0;
-//         for (int i=0;i<N;i++){
-//                 double xi = vertices[i][0];
-//                 double yi = vertices[i][1];
-//                 double xii = vertices[i+1][0];
-//                 double yii = vertices[i+1][1];
-//                 sumCX = sumCX + ((xi + xii)*((xi*yii)-(xii*yi)));
+//         double cs = 0;
+//         for(int i = 0; i <poly.vertices.size();i++){
+//              poly.vertices[i] =   
 //         }
-//         CX = (1/A) * sumCX;
-
-//         double sumCY = 0.0;
-//         for (int i=0;i<N;i++){
-//                 double xi = vertices[i][0];
-//                 double yi = vertices[i][1];
-//                 double xii = vertices[i+1][0];
-//                 double yii = vertices[i+1][1];
-//                 sumCY = sumCY + ((yi + yii)*((xi*yii)-(xii*yi)));
-//         }
-//         CY = (1/A) * sumCY;
-
-//         return Vector(CX,CY,0);
+        
 // }
+
